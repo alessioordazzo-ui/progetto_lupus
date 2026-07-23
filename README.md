@@ -4,9 +4,6 @@ Bozza di codici che DOVREBBERO far girare la tanto osannata app
 
 
 
-
-
-
 Fase 1: Configurazione dell'Ambiente di Lavoro (Oggi)
 [ ] 1. Installa Python: Scaricalo dal sito ufficiale. Ricorda di spuntare "Add Python to PATH" durante l'installazione.
 
