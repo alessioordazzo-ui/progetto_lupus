@@ -88,5 +88,10 @@
   "fazione": "Neutrale",
   "tipo": "Attivo",
   "descrizione": "Ha come obiettivo quello di farsi linciare dal villaggio durante il giorno. Se viene ucciso durante la notte perde."
+  },
+  "Doppleganger": {
+  "fazione": "Neutrale",
+  "tipo": "Notturno",
+  "descrizione": "Se riesce ad indovinare 4 ruoli esatti durante la notte, vince la partita"
   }
 }
