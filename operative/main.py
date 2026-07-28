@@ -7,7 +7,7 @@ from ruoli import RUOLI_SPECIALI  # legge i dati da ruoli.json
 # Tutti i posti rimanenti vengono riempiti automaticamente con "Contadino".
 COMPOSIZIONE_RUOLI = {
     "Veggente": 1,
-    "Medico": 1,
+    "Curatrice": 1,
     "Lupo Silenziatore": 2,
 }
 
