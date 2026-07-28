@@ -54,7 +54,7 @@ mostra_schermata_narratore()
 
 # Esempio: i giocatori votano a voce, decidono di eliminare "Bob"
 # Il Narratore preme il pulsante sul suo telefono per eliminare Bob
-lincia_giocatore("Bob")
+lincia_giocatore("Bob")  # Supponiamo che Alice sia stata votata
 
 # Il Narratore controlla la schermata aggiornata per vedere chi è rimasto
 mostra_schermata_narratore()

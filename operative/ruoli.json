@@ -1,0 +1,92 @@
+{
+  "Sindaco": {
+    "fazione": "Umani",
+    "tipo": "Passivo",
+    "descrizione": "Può decidere, alla fine delle votazioni, di far spostare tutti i voti su una persona a sua scelta. Utilizzabile una volta a partita."
+  },
+  "Alchimista": {
+    "fazione": "Umani",
+    "tipo": "Attivo - Notturno",
+    "descrizione": "Possiede due pozioni (una cura e una uccide). Può usarle solo una volta."
+  },
+  "Sceriffo": {
+    "fazione": "Umani",
+    "tipo": "Attivo - Diurno",
+    "descrizione": "Può decidere se sparare o no durante la notte: se muore un buono muore lui, se muore un cattivo va avanti."
+  },
+  "Curatrice": {
+    "fazione": "Umani",
+    "tipo": "Attivo - Notturno",
+    "descrizione": "Ogni notte sceglie una persona e la cura. Può curare se stesso."
+  },
+  "Veggente": {
+    "fazione": "Umani",
+    "tipo": "Attivo - Notturno",
+    "descrizione": "Ogni notte sceglierà una persona e verrà detto a "
+  },
+  "Guardia del Corpo": {
+    "fazione": "Umani",
+    "tipo": "Attivo - Notturno",
+    "descrizione": "Protegge un giocatore, sacrificandosi al posto suo in caso di attacco."
+  },
+  "Mitomane": {
+    "fazione": "Umani",
+    "tipo": "Passivo",
+    "descrizione": "Al primo turno di notte sceglierà una persona a caso del villaggio e prenderà le sue sembianze per tutta la partita."
+  },
+  "Ammazza Vampiro": {
+    "fazione": "Umani",
+    "tipo": "Attivo - Notturno",
+    "descrizione": "Ha un numero limitato di tentativi per eliminare il vampiro nel corso della partita."
+  },
+  "Lupo Silenziatore": {
+    "fazione": "Lupi",
+    "tipo": "Attivo - Notturno",
+    "descrizione": "Oltre a partecipare attivamente con i lupi, impedisce a un giocatore di parlare o votare il giorno seguente."
+  },
+  "Lupo Sciamano": {
+    "fazione": "Lupi",
+    "tipo": "Attivo - Notturno",
+    "descrizione": "Dopo il terzo turno, può sapere l'identità di un giocatore morto"
+  },
+  "Lupo Mitomane": {
+    "fazione": "Lupi",
+    "tipo": "Passivo",
+    "descrizione": "Crede di essere un Umano con un ruolo speciale, ma vota con i Lupi durante la notte."
+  },
+  "Lupo Alchimista": {
+    "fazione": "Lupi",
+    "tipo": "Attivo - Notturno",
+    "descrizione": "Versione lupesca dell'Alchimista: prepara pozioni a favore della fazione Lupi."
+  },
+  "Lupo Solitario": {
+    "fazione": "Lupi",
+    "tipo": "Passivo",
+    "descrizione": "Vince solo se resta l'ultimo lupo in vita, anche contro gli altri lupi."
+  },
+  "Pestilenza": {
+    "fazione": "Neutrale",
+    "tipo": "Attivo - Notturno",
+    "descrizione": "Infetta un giocatore ogni notte; vince se infetta l'intero villaggio."
+  },
+  "Vampiro": {
+    "fazione": "Neutrale",
+    "tipo": "Attivo - Notturno",
+    "descrizione": "Morde un giocatore ogni notte; se non viene curato, si converte in Vampiro."
+  },
+  "Boia": {
+    "fazione": "Neutrale",
+    "tipo": "Attivo",
+    "descrizione": "Ha come unico obiettivo far linciare dal villaggio un bersaglio specifico."
+  },
+  "Flautista": {
+    "fazione": "Neutrale",
+    "tipo": "Attivo - Notturno",
+    "descrizione": "Ogni notte 'incanta' due giocatori; vince se resta lui solo con tutti gli incantati."
+  },
+  "Folle": {
+  "fazione": "Neutrale",
+  "tipo": "Attivo",
+  "descrizione": "Ha come obiettivo quello di farsi linciare dal villaggio durante il giorno. Se viene ucciso durante la notte perde."
+  }
+}
