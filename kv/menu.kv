@@ -1,0 +1,44 @@
+<MenuScreen>:
+
+    canvas.before:
+        Color:
+            rgba: 0.10, 0.10, 0.10, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: "vertical"
+        spacing: 20
+        padding: 40
+
+        Widget:
+
+        Label:
+            text: "LUPUS"
+            font_size: "42sp"
+            bold: True
+            size_hint_y: None
+            height: 60
+
+        Button:
+            text: "CREA LOBBY"
+            size_hint_y: None
+            height: 60
+
+        Button:
+            text: "ENTRA LOBBY"
+            size_hint_y: None
+            height: 60
+
+        Button:
+            text: "IMPOSTAZIONI"
+            size_hint_y: None
+            height: 60
+
+        Button:
+            text: "INFO"
+            size_hint_y: None
+            height: 60
+
+        Widget:
