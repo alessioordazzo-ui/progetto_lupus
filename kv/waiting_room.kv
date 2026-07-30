@@ -1,0 +1,50 @@
+<WaitingRoomScreen>
+
+    MDBoxLayout:
+
+        orientation: "vertical"
+
+        padding: "20dp"
+
+        spacing: "20dp"
+
+        MDLabel:
+
+            text: "Sala d'attesa"
+        LupusLobbyCode:
+            lobby_code: "X4J8PQ"
+
+            halign: "center"
+
+            font_style: "Headline"
+
+        ScrollView:
+
+            MDBoxLayout:
+
+                orientation: "vertical"
+
+                adaptive_height: True
+
+                spacing: "10dp"
+
+                LupusPlayerCard:
+                    player_name: "Alessio"
+                    role: "Host"
+                    host: True
+                    ready: True
+
+                LupusPlayerCard:
+                    player_name: "Marco"
+                    role: "Giocatore"
+                    ready: False
+
+                LupusPlayerCard:
+                    player_name: "Luca"
+                    role: "Giocatore"
+                    ready: True
+
+                LupusPlayerCard:
+                    player_name: "Sara"
+                    role: "Giocatore"
+                    ready: True

@@ -1,44 +1,118 @@
 <MenuScreen>:
-
-    canvas.before:
-        Color:
-            rgba: 0.10, 0.10, 0.10, 1
-        Rectangle:
-            pos: self.pos
-            size: self.size
-
-    BoxLayout:
+    MDBoxLayout:
         orientation: "vertical"
-        spacing: 20
-        padding: 40
+        md_bg_color: 0.07, 0.07, 0.07, 1
+        padding: "35dp"
+        spacing: "18dp"
 
         Widget:
+            size_hint_y: 0.3
 
-        Label:
+        MDLabel:
+            text: "🐺"
+            halign: "center"
+            font_size: "64sp"
+
+        MDLabel:
             text: "LUPUS"
-            font_size: "42sp"
+            halign: "center"
+            font_size: "38sp"
             bold: True
-            size_hint_y: None
-            height: 60
+            theme_text_color: "Custom"
+            text_color: 0.80, 0.15, 0.15, 1
 
-        Button:
-            text: "CREA LOBBY"
-            size_hint_y: None
-            height: 60
-
-        Button:
-            text: "ENTRA LOBBY"
-            size_hint_y: None
-            height: 60
-
-        Button:
-            text: "IMPOSTAZIONI"
-            size_hint_y: None
-            height: 60
-
-        Button:
-            text: "INFO"
-            size_hint_y: None
-            height: 60
+        MDLabel:
+            text: "Il nuovo lupus!"
+            halign: "center"
+            theme_text_color: "Secondary"
 
         Widget:
+            size_hint_y: 0.08
+
+        MDCard:
+            orientation: "vertical"
+            size_hint: 0.9, None
+            height: "90dp"
+            pos_hint: {"center_x": 0.5}
+            padding: "15dp"
+            radius: [18, 18, 18, 18]
+            ripple_behavior: True
+            elevation: 4
+            md_bg_color: 0.15, 0.15, 0.15, 1
+
+            MDLabel:
+                text: "CREA LOBBY"
+                bold: True
+                font_size: "22sp"
+
+            MDLabel:
+                text: "Avvia una nuova partita"
+                theme_text_color: "Secondary"
+
+        MDCard:
+            orientation: "vertical"
+            size_hint: 0.9, None
+            height: "90dp"
+            pos_hint: {"center_x": 0.5}
+            padding: "15dp"
+            radius: [18, 18, 18, 18]
+            ripple_behavior: True
+            elevation: 4
+            md_bg_color: 0.15, 0.15, 0.15, 1
+
+            MDLabel:
+                text: "ENTRA LOBBY"
+                bold: True
+                font_size: "22sp"
+
+            MDLabel:
+                text: "Entra con un codice"
+                theme_text_color: "Secondary"
+
+        MDCard:
+            orientation: "vertical"
+            size_hint: 0.9, None
+            height: "90dp"
+            pos_hint: {"center_x": 0.5}
+            padding: "15dp"
+            radius: [18, 18, 18, 18]
+            ripple_behavior: True
+            elevation: 4
+            md_bg_color: 0.15, 0.15, 0.15, 1
+
+            MDLabel:
+                text: "IMPOSTAZIONI"
+                bold: True
+                font_size: "22sp"
+
+            MDLabel:
+                text: "Configurazione dell'app"
+                theme_text_color: "Secondary"
+
+        MDCard:
+            orientation: "vertical"
+            size_hint: 0.9, None
+            height: "90dp"
+            pos_hint: {"center_x": 0.5}
+            padding: "15dp"
+            radius: [18, 18, 18, 18]
+            ripple_behavior: True
+            elevation: 4
+            md_bg_color: 0.15, 0.15, 0.15, 1
+
+            MDLabel:
+                text: "INFORMAZIONI"
+                bold: True
+                font_size: "22sp"
+
+            MDLabel:
+                text: "Guida, crediti e versione"
+                theme_text_color: "Secondary"
+
+        Widget:
+            size_hint_y: 0.2
+
+        MDLabel:
+            text: "Versione 0.1 Alpha"
+            halign: "center"
+            theme_text_color: "Hint"

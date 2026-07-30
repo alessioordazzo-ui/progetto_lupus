@@ -1,0 +1,23 @@
+<LupusCounter>:
+
+    orientation: "horizontal"
+    spacing: "20dp"
+
+    size_hint_y: None
+    height: "60dp"
+
+    MDRaisedButton:
+        text: "-"
+        size_hint_x: .25
+        on_release: root.decrease()
+
+    MDLabel:
+        text: str(root.value)
+        halign: "center"
+        bold: True
+        font_style: "H5"
+
+    MDRaisedButton:
+        text: "+"
+        size_hint_x: .25
+        on_release: root.increase()

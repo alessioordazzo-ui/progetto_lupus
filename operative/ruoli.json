@@ -93,5 +93,15 @@
   "fazione": "Neutrale",
   "tipo": "Notturno",
   "descrizione": "Se riesce ad indovinare 4 ruoli esatti durante la notte, vince la partita"
+  },
+  "Lupo": {
+  "fazione": "Cattivi",
+  "tipo": "Attivo - Notturno",
+  "descrizione": "Ogni notte sceglie una persona e verrà uccisa"
+  },
+  "Lupo": {
+  "fazione": "Cattivi",
+  "tipo": "Attivo - Notturno",
+  "descrizione": "Ogni notte sceglie una persona e verrà uccisa"
   }
 }

@@ -21,4 +21,22 @@ class Theme:
 
     PADDING = 20
 
-SPACING = 15
+    SPACING = 15
+
+
+from kivy.utils import get_color_from_hex
+
+
+class LupusTheme:
+
+    BACKGROUND = get_color_from_hex("#121212")
+
+    CARD = get_color_from_hex("#1E1E1E")
+
+    WHITE = get_color_from_hex("#FFFFFF")
+
+    RED = get_color_from_hex("#B71C1C")
+
+    BLUE = get_color_from_hex("#1565C0")
+
+    GREY = get_color_from_hex("#616161")

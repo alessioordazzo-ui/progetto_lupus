@@ -1,0 +1,42 @@
+<CreateLobbyScreen>:
+
+    MDBoxLayout:
+        orientation: "vertical"
+
+        MDTopAppBar:
+            title: "Crea una partita"
+            left_action_items: [["arrow-left", lambda x: app.root.current = "menu"]]
+
+        ScrollView:
+
+            MDBoxLayout:
+                orientation: "vertical"
+
+                adaptive_height: True
+
+                padding: "20dp"
+
+                spacing: "20dp"
+
+                LupusSection:
+                    icon: "📋"
+                    title: "Informazioni Lobby"
+                
+                LupusSection:
+                    icon: "👥"
+                    title: "Giocatori"
+
+                LupusCounter:
+                    id: players
+
+                    value: 10
+
+                    minimum: 4
+
+                    maximum: 30
+
+                LupusTextField:
+                    hint: "Nome della lobby"
+
+                LupusTextField:
+                    hint: "Password (opzionale)"

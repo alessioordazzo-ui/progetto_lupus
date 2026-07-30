@@ -1,0 +1,32 @@
+<LupusLobbyCode>:
+
+    orientation: "vertical"
+
+    size_hint_y: None
+    height: "170dp"
+
+    padding: "20dp"
+    spacing: "12dp"
+
+    canvas.before:
+        Color:
+            rgba: (.15, .15, .15, 1)
+
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [18]
+
+    MDLabel:
+        text: "CODICE LOBBY"
+        halign: "center"
+        theme_text_color: "Hint"
+
+    MDLabel:
+        text: root.lobby_code
+        halign: "center"
+
+    MDFlatButton:
+        text: "📋 Tocca per copiare"
+        pos_hint: {"center_x": .5}
+        on_release: root.copy_code()
