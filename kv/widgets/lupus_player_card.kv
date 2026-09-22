@@ -1,56 +1,73 @@
-<LupusPlayerCard>
+<LupusPlayerCard>:
+
+    orientation: "horizontal"
 
     size_hint_y: None
-    height: "90dp"
+    height: "80dp"
 
-    padding: "15dp"
-
-    spacing: "15dp"
+    padding: "12dp"
+    spacing: "12dp"
 
     canvas.before:
         Color:
-            rgba:
-                (.60,.15,.15,1) if root.host else (.16,.16,.16,1)
+            rgba: (.12, .12, .12, 1)
 
         RoundedRectangle:
             pos: self.pos
             size: self.size
-            radius: [15]
+            radius: [16]
 
+    # ICONA HOST / GIOCATORE
     MDLabel:
-
-        text:
-            "👑" if root.host else "🙂"
-
-        font_style: "Headline"
+        text: "👑" if root.host else "🙂"
 
         size_hint_x: None
+        width: "45dp"
 
-        width: "50dp"
+        halign: "center"
+        valign: "middle"
 
+        font_style: "H6"
+
+    # INFORMAZIONI GIOCATORE
     MDBoxLayout:
 
         orientation: "vertical"
 
-        MDLabel:
+        spacing: "2dp"
 
+        MDLabel:
             text: root.player_name
+
+            font_style: "H6"
 
             bold: True
 
-            font_style: "Title"
+            theme_text_color: "Primary"
+
+            valign: "middle"
 
         MDLabel:
-
             text: root.role
 
-            theme_text_color: "Hint"
+            font_style: "Body2"
 
+            theme_text_color: "Secondary"
+
+            valign: "middle"
+
+    # STATO READY
     MDLabel:
+        text: "✓ PRONTO" if root.ready else "IN ATTESA"
 
-        text:
-            "🟢 Pronto" if root.ready else "🟠 Attesa"
+        size_hint_x: None
+        width: "100dp"
 
-        halign: "right"
+        halign: "center"
+        valign: "middle"
 
-        size_hint_x: .45
+        font_style: "Caption"
+
+        theme_text_color: "Custom"
+
+        text_color: (0, 0.8, 0, 1) if root.ready else (0.7, 0.7, 0.7, 1)

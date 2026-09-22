@@ -1,0 +1,169 @@
+<GameScreen>:
+
+    MDBoxLayout:
+        orientation: "vertical"
+        padding: "16dp"
+        spacing: "12dp"
+
+        # =========================
+        # TITOLO
+        # =========================
+
+        MDLabel:
+            text: "LUPUS"
+            halign: "center"
+            font_style: "H4"
+            bold: True
+
+            size_hint_y: None
+            height: "55dp"
+
+        # =========================
+        # FASE DELLA PARTITA
+        # =========================
+
+        MDLabel:
+            text: root.phase.upper() + " " + str(root.day_number)
+            halign: "center"
+            font_style: "H5"
+            bold: True
+
+            size_hint_y: None
+            height: "50dp"
+
+        # =========================
+        # RUOLO DEL GIOCATORE
+        # =========================
+
+        MDBoxLayout:
+            orientation: "vertical"
+
+            padding: "16dp"
+            spacing: "8dp"
+
+            size_hint_y: None
+            height: "120dp"
+
+            canvas.before:
+                Color:
+                    rgba: (.12, .12, .12, 1)
+
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [16]
+
+            MDLabel:
+                text: "IL TUO RUOLO"
+                halign: "center"
+                font_style: "Subtitle1"
+
+            MDLabel:
+                text: "IN ATTESA"
+                halign: "center"
+                font_style: "H5"
+                bold: True
+
+        # =========================
+        # GIOCATORI
+        # =========================
+
+        MDLabel:
+            text: "GIOCATORI"
+            font_style: "H6"
+            bold: True
+
+            size_hint_y: None
+            height: "40dp"
+
+        ScrollView:
+            do_scroll_x: False
+
+            MDBoxLayout:
+                orientation: "vertical"
+                spacing: "8dp"
+
+                size_hint_y: None
+                height: self.minimum_height
+
+                # ALESSIO
+                MDBoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: "45dp"
+
+                    MDLabel:
+                        text: "Alessio"
+                        font_style: "Body1"
+
+                    MDLabel:
+                        text: "VIVO"
+                        halign: "right"
+                        font_style: "Caption"
+                        theme_text_color: "Custom"
+                        text_color: (0, 0.8, 0, 1)
+
+                # MARCO
+                MDBoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: "45dp"
+
+                    MDLabel:
+                        text: "Marco"
+                        font_style: "Body1"
+
+                    MDLabel:
+                        text: "VIVO"
+                        halign: "right"
+                        font_style: "Caption"
+                        theme_text_color: "Custom"
+                        text_color: (0, 0.8, 0, 1)
+
+                # LUCA
+                MDBoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: "45dp"
+
+                    MDLabel:
+                        text: "Luca"
+                        font_style: "Body1"
+
+                    MDLabel:
+                        text: "MORTO"
+                        halign: "right"
+                        font_style: "Caption"
+                        theme_text_color: "Custom"
+                        text_color: (0.8, 0, 0, 1)
+
+                # SARA
+                MDBoxLayout:
+                    orientation: "horizontal"
+                    size_hint_y: None
+                    height: "45dp"
+
+                    MDLabel:
+                        text: "Sara"
+                        font_style: "Body1"
+
+                    MDLabel:
+                        text: "VIVO"
+                        halign: "right"
+                        font_style: "Caption"
+                        theme_text_color: "Custom"
+                        text_color: (0, 0.8, 0, 1)
+
+        # =========================
+        # PULSANTE
+        # =========================
+
+        MDRaisedButton:
+            text: "CONTINUA"
+            pos_hint: {"center_x": .5}
+
+            size_hint_y: None
+            height: "50dp"
+
+            on_release:
+                root.next_phase()
