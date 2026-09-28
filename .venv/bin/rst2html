@@ -1,4 +1,4 @@
-#!/home/urdass/progetto_lupus/.venv/bin/python
+#!/home/aleurdass/Scrivania/progetto_lupus/.venv/bin/python
 import sys
 from docutils.core import rst2html
 if __name__ == '__main__':

@@ -1,0 +1,36 @@
+<NightScreen>:
+
+    MDBoxLayout:
+        orientation: "vertical"
+        padding: "16dp"
+        spacing: "20dp"
+
+        MDLabel:
+            text: "NOTTE " + str(root.day_number)
+            halign: "center"
+            font_style: "H4"
+            bold: True
+            size_hint_y: None
+            height: "60dp"
+
+        MDLabel:
+            text: "Il villaggio dorme..."
+            halign: "center"
+            font_style: "H5"
+            size_hint_y: None
+            height: "60dp"
+
+        MDLabel:
+            text: "Qui verranno eseguite le azioni notturne dei ruoli."
+            halign: "center"
+            font_style: "Body1"
+            theme_text_color: "Secondary"
+
+        MDRaisedButton:
+            text: "TERMINA NOTTE"
+            pos_hint: {"center_x": .5}
+            size_hint_y: None
+            height: "50dp"
+
+            on_release:
+                root.finish_night()

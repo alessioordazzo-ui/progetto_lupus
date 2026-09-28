@@ -54,6 +54,11 @@ def get_nomi_ruoli():
     """Ritorna la lista dei nomi di tutti i ruoli disponibili."""
     return list(RUOLI_SPECIALI.keys())
 
+def get_ruolo(nome_ruolo):
+    """Ritorna i dati di un singolo ruolo.
+    Se il ruolo non esiste, ritorna None."""
+    return RUOLI_SPECIALI.get(nome_ruolo)
+
 
 def descrivi_ruolo(nome_ruolo):
     """Ritorna una stringa leggibile con le info di un ruolo, o un messaggio di errore se non esiste."""
@@ -66,7 +71,7 @@ def descrivi_ruolo(nome_ruolo):
 
 if __name__ == "__main__":
     # Piccolo self-test manuale: stampa tutti i ruoli raggruppati per fazione
-    for fazione in ("Umani", "Lupi", "Neutrale"):
+    for fazione in ("Umani", "Lupi", "Neutrali"):
         print(f"\n=== {fazione.upper()} ===")
         for nome in get_ruoli_per_fazione(fazione):
             print(descrivi_ruolo(nome))

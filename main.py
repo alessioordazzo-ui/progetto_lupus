@@ -10,7 +10,8 @@ from widgets.lupus_player_card import LupusPlayerCard
 from widgets.lupus_lobby_code import LupusLobbyCode
 from screens.waiting_room import WaitingRoomScreen
 from screens.game import GameScreen
-
+from screens.vote import VoteScreen
+from screens.night import NightScreen
 
 class LupusApp(MDApp):
 
@@ -27,13 +28,17 @@ class LupusApp(MDApp):
         Builder.load_file("kv/widgets/lupus_lobby_code.kv")
         Builder.load_file("kv/waiting_room.kv")
         Builder.load_file("kv/game.kv")
+        Builder.load_file("kv/vote.kv")
+        Builder.load_file("kv/night.kv")
 
+    
         sm = ScreenManager()
 
         sm.add_widget(MenuScreen(name="menu"))
         sm.add_widget(WaitingRoomScreen(name="waiting_room"))
         sm.add_widget(GameScreen(name="game"))
-
+        sm.add_widget(VoteScreen(name="vote"))
+        sm.add_widget(NightScreen(name="night"))
         sm.current = "waiting_room"
 
         return sm

@@ -14,12 +14,11 @@
             halign: "center"
             font_style: "H4"
             bold: True
-
             size_hint_y: None
             height: "55dp"
 
         # =========================
-        # FASE DELLA PARTITA
+        # GIORNO / NOTTE
         # =========================
 
         MDLabel:
@@ -27,7 +26,6 @@
             halign: "center"
             font_style: "H5"
             bold: True
-
             size_hint_y: None
             height: "50dp"
 
@@ -37,10 +35,8 @@
 
         MDBoxLayout:
             orientation: "vertical"
-
             padding: "16dp"
             spacing: "8dp"
-
             size_hint_y: None
             height: "120dp"
 
@@ -59,111 +55,62 @@
                 font_style: "Subtitle1"
 
             MDLabel:
-                text: "IN ATTESA"
+                id: role_label
+                text: root.local_player_role
                 halign: "center"
                 font_style: "H5"
                 bold: True
 
         # =========================
-        # GIOCATORI
+        # DESCRIZIONE FASE
+        # =========================
+
+        MDLabel:
+            text: "È GIORNO: preparati alla discussione e alla votazione." if root.phase == "giorno" else "È NOTTE: attendi le azioni notturne."
+            halign: "center"
+            font_style: "Body1"
+            theme_text_color: "Secondary"
+            size_hint_y: None
+            height: "45dp"
+
+        # =========================
+        # TITOLO LISTA GIOCATORI
         # =========================
 
         MDLabel:
             text: "GIOCATORI"
             font_style: "H6"
             bold: True
-
             size_hint_y: None
             height: "40dp"
+
+        # =========================
+        # LISTA GIOCATORI
+        # =========================
 
         ScrollView:
             do_scroll_x: False
 
             MDBoxLayout:
+                id: players_list
                 orientation: "vertical"
                 spacing: "8dp"
-
                 size_hint_y: None
                 height: self.minimum_height
 
-                # ALESSIO
-                MDBoxLayout:
-                    orientation: "horizontal"
-                    size_hint_y: None
-                    height: "45dp"
-
-                    MDLabel:
-                        text: "Alessio"
-                        font_style: "Body1"
-
-                    MDLabel:
-                        text: "VIVO"
-                        halign: "right"
-                        font_style: "Caption"
-                        theme_text_color: "Custom"
-                        text_color: (0, 0.8, 0, 1)
-
-                # MARCO
-                MDBoxLayout:
-                    orientation: "horizontal"
-                    size_hint_y: None
-                    height: "45dp"
-
-                    MDLabel:
-                        text: "Marco"
-                        font_style: "Body1"
-
-                    MDLabel:
-                        text: "VIVO"
-                        halign: "right"
-                        font_style: "Caption"
-                        theme_text_color: "Custom"
-                        text_color: (0, 0.8, 0, 1)
-
-                # LUCA
-                MDBoxLayout:
-                    orientation: "horizontal"
-                    size_hint_y: None
-                    height: "45dp"
-
-                    MDLabel:
-                        text: "Luca"
-                        font_style: "Body1"
-
-                    MDLabel:
-                        text: "MORTO"
-                        halign: "right"
-                        font_style: "Caption"
-                        theme_text_color: "Custom"
-                        text_color: (0.8, 0, 0, 1)
-
-                # SARA
-                MDBoxLayout:
-                    orientation: "horizontal"
-                    size_hint_y: None
-                    height: "45dp"
-
-                    MDLabel:
-                        text: "Sara"
-                        font_style: "Body1"
-
-                    MDLabel:
-                        text: "VIVO"
-                        halign: "right"
-                        font_style: "Caption"
-                        theme_text_color: "Custom"
-                        text_color: (0, 0.8, 0, 1)
-
         # =========================
-        # PULSANTE
+        # AZIONE PRINCIPALE
         # =========================
 
-        MDRaisedButton:
-            text: "CONTINUA"
-            pos_hint: {"center_x": .5}
-
+        MDBoxLayout:
+            orientation: "horizontal"
+            spacing: "10dp"
             size_hint_y: None
             height: "50dp"
 
-            on_release:
-                root.next_phase()
+            MDRaisedButton:
+                text: "VOTAZIONE" if root.phase == "giorno" else "AZIONI NOTTURNE"
+                size_hint_x: 1
+
+                on_release:
+                    root.open_vote() if root.phase == "giorno" else root.open_night()

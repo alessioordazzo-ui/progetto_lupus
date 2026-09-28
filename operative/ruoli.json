@@ -1,107 +1,302 @@
 {
-  "Sindaco": {
-    "fazione": "Umani",
-    "tipo": "Passivo",
-    "descrizione": "Può decidere, alla fine delle votazioni, di far spostare tutti i voti su una persona a sua scelta. Utilizzabile una volta a partita."
-  },
-  "Alchimista": {
-    "fazione": "Umani",
+  "Lupo": {
+    "fazione": "Lupi",
     "tipo": "Attivo - Notturno",
-    "descrizione": "Possiede due pozioni (una cura e una uccide). Può usarle solo una volta."
+    "azione": "uccidi",
+    "bersagli": 1,
+    "descrizione": "Durante la notte decide di uccidere una persona."
   },
-  "Sceriffo": {
-    "fazione": "Umani",
-    "tipo": "Attivo - Diurno",
-    "descrizione": "Può decidere se sparare o no durante la notte: se muore un buono muore lui, se muore un cattivo va avanti."
-  },
-  "Curatrice": {
-    "fazione": "Umani",
-    "tipo": "Attivo - Notturno",
-    "descrizione": "Ogni notte sceglie una persona e la cura. Può curare se stesso."
-  },
-  "Veggente": {
-    "fazione": "Umani",
-    "tipo": "Attivo - Notturno",
-    "descrizione": "Ogni notte sceglierà una persona e verrà detto a "
-  },
-  "Guardia del Corpo": {
-    "fazione": "Umani",
-    "tipo": "Attivo - Notturno",
-    "descrizione": "Protegge un giocatore, sacrificandosi al posto suo in caso di attacco."
-  },
-  "Mitomane": {
-    "fazione": "Umani",
-    "tipo": "Passivo",
-    "descrizione": "Al primo turno di notte sceglierà una persona a caso del villaggio e prenderà le sue sembianze per tutta la partita."
-  },
-  "Ammazza Vampiro": {
-    "fazione": "Umani",
-    "tipo": "Attivo - Notturno",
-    "descrizione": "Ha un numero limitato di tentativi per eliminare il vampiro nel corso della partita."
-  },
+
   "Lupo Silenziatore": {
     "fazione": "Lupi",
     "tipo": "Attivo - Notturno",
-    "descrizione": "Oltre a partecipare attivamente con i lupi, impedisce a un giocatore di parlare o votare il giorno seguente."
+    "azione": "silenzia",
+    "bersagli": 1,
+    "descrizione": "Ogni notte sceglie una persona che non potrà né parlare durante il giorno né votare."
   },
+
   "Lupo Sciamano": {
     "fazione": "Lupi",
     "tipo": "Attivo - Notturno",
-    "descrizione": "Dopo il terzo turno, può sapere l'identità di un giocatore morto"
+    "azione": "scopri_morto",
+    "bersagli": 1,
+    "notte_minima": 3,
+    "descrizione": "Dalla terza notte può chiedere l'identità di un morto e comunicarla agli altri lupi."
   },
-  "Lupo Mitomane": {
-    "fazione": "Lupi",
-    "tipo": "Passivo",
-    "descrizione": "Crede di essere un Umano con un ruolo speciale, ma vota con i Lupi durante la notte."
-  },
-  "Lupo Alchimista": {
+
+  "Lupo Imitatore": {
     "fazione": "Lupi",
     "tipo": "Attivo - Notturno",
-    "descrizione": "Versione lupesca dell'Alchimista: prepara pozioni a favore della fazione Lupi."
+    "azione": "copia_fazione",
+    "bersagli": 1,
+    "descrizione": "Ogni notte sceglie una persona e ne copia la fazione."
   },
-  "Lupo Solitario": {
+
+  "Lupo Ipnotizzatore": {
     "fazione": "Lupi",
-    "tipo": "Passivo",
-    "descrizione": "Vince solo se resta l'ultimo lupo in vita, anche contro gli altri lupi."
-  },
-  "Pestilenza": {
-    "fazione": "Neutrale",
     "tipo": "Attivo - Notturno",
-    "descrizione": "Infetta un giocatore ogni notte; vince se infetta l'intero villaggio."
+    "azione": "corrompi_azione",
+    "bersagli": 1,
+    "descrizione": "Ogni notte sceglie una persona e corrompe la sua azione."
   },
+
+  "Lupo Indovino": {
+    "fazione": "Lupi",
+    "tipo": "Attivo - Notturno",
+    "azione": "indovina_ruolo",
+    "bersagli": 1,
+    "descrizione": "Ogni notte può indovinare un ruolo. Se lo indovina uccide il giocatore, altrimenti muore."
+  },
+
+  "Lupo Mannaro": {
+    "fazione": "Neutrali",
+    "tipo": "Attivo - Notturno",
+    "azione": "trasformazione_mannaro",
+    "bersagli": 1,
+    "descrizione": "Può trasformarsi in Lupo. La notte successiva uccide un giocatore, poi torna umano. La fazione cambia con la forma. Gioca in solitaria."
+  },
+
   "Vampiro": {
-    "fazione": "Neutrale",
+    "fazione": "Neutrali",
     "tipo": "Attivo - Notturno",
-    "descrizione": "Morde un giocatore ogni notte; se non viene curato, si converte in Vampiro."
+    "azione": "azione_vampiro",
+    "bersagli": 1,
+    "immune_attacchi_notturni": true,
+    "descrizione": "La prima notte trasforma un giocatore. Dalla seconda notte i Vampiri uccidono. Sono immuni agli attacchi notturni e muoiono solo per l'Ammazza Vampiri."
   },
-  "Boia": {
-    "fazione": "Neutrale",
+
+  "Serial Killer": {
+    "fazione": "Neutrali",
+    "tipo": "Attivo - Notturno",
+    "azione": "uccidi",
+    "bersagli": 1,
+    "immune_lupi": true,
+    "descrizione": "Ogni notte sceglie qualcuno da uccidere. Non può essere ucciso dai lupi e vince se rimane l'ultimo giocatore, eliminando sia i lupi che i cittadini."
+  },
+
+  "Indemoniato": {
+    "fazione": "Lupi",
+    "tipo": "Passivo",
+    "azione": "conosci_lupi",
+    "descrizione": "Scopre l'identità dei lupi, ma loro non sanno chi sia. Vince se i lupi vincono."
+  },
+
+  "Berserker": {
+    "fazione": "Neutrali",
+    "tipo": "Attivo - Notturno",
+    "azione": "uccidi",
+    "bersagli": 1,
+    "uccisioni_iniziali": 1,
+    "ricarica_notti": 2,
+    "descrizione": "Parte con un'uccisione. Ogni due notti in cui non uccide accumula un'uccisione da poter utilizzare in una singola notte."
+  },
+
+  "Alchimista": {
+    "fazione": "Umani",
+    "tipo": "Attivo - Notturno",
+    "azione": "pozioni",
+    "bersagli": 1,
+    "pozioni_cura": 1,
+    "pozioni_morte": 1,
+    "descrizione": "Ha solamente due pozioni per tutta la partita: una salva qualcuno e una uccide qualcuno."
+  },
+
+  "Ammazza Vampiri": {
+    "fazione": "Umani",
+    "tipo": "Attivo - Notturno",
+    "azione": "sonda_vampiro",
+    "bersagli": 1,
+    "descrizione": "Ogni notte sonda un giocatore. Se trova un Vampiro, lo uccide. Se tutti i Vampiri muoiono, diventa lo Sceriffo."
+  },
+
+  "Angelo": {
+    "fazione": "Umani",
+    "tipo": "Attivo - Notturno",
+    "azione": "resuscita",
+    "bersagli": 1,
+    "descrizione": "Può decidere di resuscitare una persona morta la notte prima, sacrificando la propria vita."
+  },
+
+  "Carceriere": {
+    "fazione": "Umani",
+    "tipo": "Attivo - Notturno",
+    "azione": "blocca_abilita",
+    "bersagli": 1,
+    "descrizione": "Ogni notte sceglie un giocatore per bloccarne l'abilità fino al mattino. La notte successiva sceglie un'altra persona."
+  },
+
+  "Investigatore": {
+    "fazione": "Umani",
+    "tipo": "Attivo - Notturno",
+    "azione": "investiga",
+    "bersagli": 1,
+    "descrizione": "La prima notte scopre la fazione di un giocatore e la notte successiva il ruolo esatto."
+  },
+
+  "Medium": {
+    "fazione": "Umani",
+    "tipo": "Attivo - Notturno",
+    "azione": "investiga_morto",
+    "bersagli": 1,
+    "notte_minima": 3,
+    "descrizione": "Dalla terza notte può chiedere l'identità di un morto e sapere se era buono, cattivo o neutrale."
+  },
+
+  "Papa": {
+    "fazione": "Umani",
+    "tipo": "Attivo - Notturno",
+    "azione": "annulla_eliminazioni_notturne",
+    "utilizzi": 1,
+    "descrizione": "Una volta a partita può annullare tutte le eliminazioni di una notte."
+  },
+
+  "Veggente": {
+    "fazione": "Umani",
+    "tipo": "Attivo - Notturno",
+    "azione": "scopri_allineamento",
+    "bersagli": 1,
+    "descrizione": "Ogni notte sceglie un giocatore e scopre se è buono o cattivo. Ai fini della Veggente, un neutrale viene considerato cattivo."
+  },
+
+  "Avvocato": {
+    "fazione": "Umani",
+    "tipo": "Attivo - Diurno",
+    "azione": "annulla_linciaggio",
+    "utilizzi": 1,
+    "descrizione": "Una volta a partita può annullare un linciaggio durante le votazioni, ma il suo ruolo viene rivelato a tutti."
+  },
+
+  "Scout": {
+    "fazione": "Umani",
     "tipo": "Attivo",
-    "descrizione": "Ha come unico obiettivo far linciare dal villaggio un bersaglio specifico."
+    "azione": "conta_cattivi",
+    "bersagli": 4,
+    "descrizione": "Indica quattro persone e scopre quanti cattivi ci sono tra loro. I neutrali non vengono conteggiati."
   },
-  "Flautista": {
-    "fazione": "Neutrale",
+
+  "Veterano": {
+    "fazione": "Umani",
     "tipo": "Attivo - Notturno",
-    "descrizione": "Ogni notte 'incanta' due giocatori; vince se resta lui solo con tutti gli incantati."
+    "azione": "allerta",
+    "utilizzi": 3,
+    "descrizione": "Ha tre possibilità di attivare la propria abilità. Qualunque cattivo che interagisce con lui mentre è attiva muore."
   },
-  "Folle": {
-  "fazione": "Neutrale",
-  "tipo": "Attivo",
-  "descrizione": "Ha come obiettivo quello di farsi linciare dal villaggio durante il giorno. Se viene ucciso durante la notte perde."
+
+  "Spia": {
+    "fazione": "Umani",
+    "tipo": "Attivo - Notturno",
+    "azione": "controlla_azione",
+    "bersagli": 1,
+    "descrizione": "Durante la notte indica una persona e scopre se ha usato o meno la propria abilità."
   },
-  "Doppleganger": {
-  "fazione": "Neutrale",
-  "tipo": "Notturno",
-  "descrizione": "Se riesce ad indovinare 4 ruoli esatti durante la notte, vince la partita"
+
+  "Curatore": {
+    "fazione": "Umani",
+    "tipo": "Attivo - Notturno",
+    "azione": "proteggi",
+    "bersagli": 1,
+    "puo_scegliere_se_stesso": true,
+    "no_stesso_bersaglio_consecutivo": true,
+    "descrizione": "Ogni notte protegge un giocatore dagli attacchi dei lupi. Può proteggere sé stesso, ma non lo stesso giocatore per due notti consecutive."
   },
-  "Lupo": {
-  "fazione": "Cattivi",
-  "tipo": "Attivo - Notturno",
-  "descrizione": "Ogni notte sceglie una persona e verrà uccisa"
+
+  "Sindaco": {
+    "fazione": "Umani",
+    "tipo": "Attivo - Diurno",
+    "azione": "sposta_voti",
+    "bersagli": 1,
+    "utilizzi": 1,
+    "descrizione": "Una volta a partita può spostare tutti i voti su una persona per linciarla. Il voto è anonimo."
   },
-  "Lupo": {
-  "fazione": "Cattivi",
-  "tipo": "Attivo - Notturno",
-  "descrizione": "Ogni notte sceglie una persona e verrà uccisa"
+
+  "Sceriffo": {
+    "fazione": "Umani",
+    "tipo": "Attivo - Notturno",
+    "azione": "spara",
+    "bersagli": 1,
+    "descrizione": "Ogni notte sceglie un giocatore. Se è cattivo lo uccide; se è buono muore lo Sceriffo."
+  },
+
+  "Fabbro": {
+    "fazione": "Umani",
+    "tipo": "Attivo - Notturno",
+    "azione": "scudo",
+    "bersagli": 1,
+    "ricarica_notti": 2,
+    "descrizione": "Può dare uno scudo a un giocatore, concedendogli una vita extra. Quando lo scudo si rompe, ne viene informato e può crearne uno nuovo dopo due notti."
+  },
+
+  "Boia": {
+    "fazione": "Umani",
+    "tipo": "Attivo - Notturno",
+    "azione": "gogna",
+    "bersagli": 1,
+    "descrizione": "Durante la notte mette alla gogna una persona. Se questa compie un'azione per uccidere, muore a sua volta."
+  },
+
+  "Oracolo": {
+    "fazione": "Umani",
+    "tipo": "Attivo - Notturno",
+    "azione": "memorizza_fazione",
+    "bersagli": 1,
+    "descrizione": "Ogni notte scopre la fazione di una persona ma non può rivelarla. Quando muore, rivela la fazione di tutti i giocatori che aveva scelto."
+  },
+
+  "Mago": {
+    "fazione": "Umani",
+    "tipo": "Attivo - Notturno",
+    "azione": "devia_effetti",
+    "bersagli": 2,
+    "no_stessa_coppia_consecutiva": true,
+    "descrizione": "Sceglie due giocatori: gli effetti sul primo vengono deviati sul secondo. Non può usare la stessa coppia per due notti consecutive."
+  },
+
+  "Doomsayer": {
+    "fazione": "Neutrali",
+    "tipo": "Attivo",
+    "azione": "indovina_ruolo",
+    "ruoli_per_vincere": 3,
+    "descrizione": "Deve indovinare tre ruoli per vincere. Se sbaglia un'accusa muore. Può scegliere di non parlare."
+  },
+
+  "Cupido": {
+    "fazione": "Neutrali",
+    "tipo": "Attivo",
+    "azione": "innamora",
+    "bersagli": 1,
+    "descrizione": "Sceglie un giocatore e i due diventano innamorati. Se uno muore, muore anche l'altro. Cupido scopre il ruolo dell'innamorato e vince se vince l'innamorato."
+  },
+
+  "Mitomane": {
+    "fazione": "Neutrali",
+    "tipo": "Attivo - Prima Notte",
+    "azione": "copia_identita",
+    "bersagli": 1,
+    "solo_prima_notte": true,
+    "descrizione": "Viene chiamato solo la prima notte, indica una persona e ne copia l'identità."
+  },
+
+  "Giullare": {
+    "fazione": "Neutrali",
+    "tipo": "Passivo - Diurno",
+    "azione": "vittoria_linciaggio",
+    "puo_autovotarsi": true,
+    "descrizione": "Se viene linciato durante il giorno vince la partita e può autovotarsi."
+  },
+
+  "Cacciatore": {
+    "fazione": "Neutrali",
+    "tipo": "Attivo - Inizio Partita",
+    "azione": "scegli_preda",
+    "bersagli": 1,
+    "descrizione": "A inizio partita sceglie una preda. Vince se la preda viene linciata di giorno. Se la preda muore in altro modo, il Cacciatore diventa Giullare."
+  },
+
+  "Pestilenza": {
+    "fazione": "Neutrali",
+    "tipo": "Attivo - Notturno",
+    "azione": "infetta",
+    "bersagli": 1,
+    "descrizione": "Ogni notte infetta una persona. La malattia viene trasmessa qualora l'infetto compia un'azione su un altro personaggio."
   }
 }

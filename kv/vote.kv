@@ -1,0 +1,69 @@
+<VoteScreen>:
+
+    MDBoxLayout:
+        orientation: "vertical"
+        padding: "16dp"
+        spacing: "12dp"
+
+        # =========================
+        # TITOLO
+        # =========================
+
+        MDLabel:
+            text: "VOTAZIONE"
+            halign: "center"
+            font_style: "H4"
+            bold: True
+            size_hint_y: None
+            height: "55dp"
+
+        # =========================
+        # ISTRUZIONI
+        # =========================
+
+        MDLabel:
+            text: "Scegli il giocatore che vuoi votare"
+            halign: "center"
+            font_style: "Body1"
+            theme_text_color: "Secondary"
+            size_hint_y: None
+            height: "45dp"
+
+        # =========================
+        # LISTA GIOCATORI
+        # =========================
+
+        ScrollView:
+            do_scroll_x: False
+
+            MDBoxLayout:
+                id: players_list
+                orientation: "vertical"
+                spacing: "10dp"
+                size_hint_y: None
+                height: self.minimum_height
+
+        # =========================
+        # GIOCATORE SELEZIONATO
+        # =========================
+
+        MDLabel:
+            text: "Selezionato: " + root.selected_player if root.selected_player else "Nessun giocatore selezionato"
+            halign: "center"
+            font_style: "H6"
+            size_hint_y: None
+            height: "50dp"
+
+        # =========================
+        # CONFERMA
+        # =========================
+
+        MDRaisedButton:
+            text: "CONFERMA VOTO"
+            pos_hint: {"center_x": .5}
+            size_hint_y: None
+            height: "50dp"
+            disabled: not root.selected_player
+
+            on_release:
+                root.confirm_vote()
