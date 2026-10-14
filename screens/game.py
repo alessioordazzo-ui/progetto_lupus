@@ -18,7 +18,7 @@ class GameScreen(Screen):
 
     # Per ora il giocatore locale è impostato manualmente.
     # In futuro arriverà dalla lobby.
-    local_player_name = StringProperty("Luca")
+    local_player_name = StringProperty("Alessio")
     local_player_role = StringProperty("IN ATTESA")
 
     # =========================
@@ -56,7 +56,6 @@ class GameScreen(Screen):
     # =========================
     # INIZIALIZZAZIONE
     # =========================
-
     def on_kv_post(self, base_widget):
         self.update_local_player_role()
         self.update_players()

@@ -3,7 +3,7 @@
     MDBoxLayout:
         orientation: "vertical"
         padding: "16dp"
-        spacing: "20dp"
+        spacing: "12dp"
 
         MDLabel:
             text: "NOTTE " + str(root.day_number)
@@ -11,26 +11,69 @@
             font_style: "H4"
             bold: True
             size_hint_y: None
-            height: "60dp"
+            height: "55dp"
 
         MDLabel:
-            text: "Il villaggio dorme..."
+            text: "IL TUO RUOLO"
+            halign: "center"
+            font_style: "Subtitle1"
+            size_hint_y: None
+            height: "30dp"
+
+        MDLabel:
+            text: root.local_player_role
             halign: "center"
             font_style: "H5"
+            bold: True
             size_hint_y: None
-            height: "60dp"
+            height: "40dp"
 
         MDLabel:
-            text: "Qui verranno eseguite le azioni notturne dei ruoli."
+            text: "AZIONE: " + root.current_action
             halign: "center"
             font_style: "Body1"
             theme_text_color: "Secondary"
+            size_hint_y: None
+            height: "35dp"
+
+        MDLabel:
+            text: "SCEGLI IL BERSAGLIO"
+            halign: "center"
+            font_style: "H6"
+            bold: True
+            size_hint_y: None
+            height: "40dp"
+
+        ScrollView:
+            do_scroll_x: False
+
+            MDBoxLayout:
+                id: players_list
+                orientation: "vertical"
+                spacing: "8dp"
+                size_hint_y: None
+                height: self.minimum_height
+
+        MDLabel:
+            text: "Selezionato: " + root.selected_player if root.selected_player else "Nessun giocatore selezionato"
+            halign: "center"
+            font_style: "Body1"
+            size_hint_y: None
+            height: "40dp"
 
         MDRaisedButton:
-            text: "TERMINA NOTTE"
+            text: "AZIONE ESEGUITA" if root.action_used else "CONFERMA AZIONE"
             pos_hint: {"center_x": .5}
             size_hint_y: None
             height: "50dp"
+            disabled: not root.selected_player or root.action_used
+            on_release:
+                root.execute_action()
 
+        MDFlatButton:
+            text: "TERMINA NOTTE"
+            pos_hint: {"center_x": .5}
+            size_hint_y: None
+            height: "45dp"
             on_release:
                 root.finish_night()
