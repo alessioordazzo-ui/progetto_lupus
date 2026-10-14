@@ -1,3 +1,4 @@
+
 <GameScreen>:
 
     MDBoxLayout:
@@ -72,6 +73,22 @@
             theme_text_color: "Secondary"
             size_hint_y: None
             height: "45dp"
+
+        # =========================
+        # RISULTATI INDAGINI
+        # =========================
+
+        MDRaisedButton:
+            text: "RISULTATI INDAGINI"
+            size_hint_x: 1
+            size_hint_y: None
+            height: "45dp"
+
+            opacity: 1 if root.phase == "giorno" else 0
+            disabled: root.phase != "giorno"
+
+            on_release:
+                root.manager.get_screen("night").mostra_risultati_privati()
 
         # =========================
         # TITOLO LISTA GIOCATORI

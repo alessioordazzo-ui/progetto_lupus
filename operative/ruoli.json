@@ -196,7 +196,7 @@
     "azione": "proteggi",
     "bersagli": 1,
     "puo_scegliere_se_stesso": true,
-    "no_stesso_bersaglio_consecutivo": true,
+    "no_stesso_bersaglio_consecutivo": false,
     "descrizione": "Ogni notte protegge un giocatore dagli attacchi dei lupi. Può proteggere sé stesso, ma non lo stesso giocatore per due notti consecutive."
   },
 

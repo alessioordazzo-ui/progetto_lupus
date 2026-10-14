@@ -7,7 +7,8 @@ from kivy.properties import (
     BooleanProperty
 )
 
-from kivymd.uix.button import MDRaisedButton
+from kivymd.uix.button import MDRaisedButton, MDFlatButton
+from kivymd.uix.dialog import MDDialog
 
 from operative.ruoli import get_ruolo
 from operative.notte import GestoreNotte
@@ -27,12 +28,26 @@ class NightScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+        # Gestore delle azioni notturne
         self.gestore_notte = GestoreNotte()
+
+        # Identificativo della notte corrente
         self.notte_inizializzata = None
+
+        # Archivio dei risultati investigativi
+        # associati ai singoli giocatori
+        self.casella_risultati = {}
+
+        # Finestra dei risultati
+        self.dialog_risultati = None
+
+    # ==========================================
+    # CONTROLLO AZIONI
+    # ==========================================
 
     def giocatore_ha_agito(self, nome_giocatore):
         """
-        Verifica se un giocatore ha già registrato
+        Controlla se il giocatore ha già registrato
         un'azione durante la notte corrente.
         """
 
@@ -41,10 +56,16 @@ class NightScreen(Screen):
             for azione in self.gestore_notte.azioni
         )
 
+    # ==========================================
+    # INIZIALIZZAZIONE NOTTE
+    # ==========================================
+
     def on_pre_enter(self):
         """
-        Prepara la schermata senza cancellare
-        le azioni della notte corrente.
+        Prepara la schermata notturna.
+
+        Le azioni vengono mantenute quando
+        si rientra nella stessa notte.
         """
 
         game_screen = self.manager.get_screen("game")
@@ -52,10 +73,12 @@ class NightScreen(Screen):
         self.day_number = game_screen.day_number
         self.local_player_role = game_screen.local_player_role
 
+        # Nuova notte
         if self.notte_inizializzata != self.day_number:
 
             self.gestore_notte.reset()
 
+            # Rimuove le protezioni della notte precedente
             for player in game_screen.players:
                 player["protected"] = False
 
@@ -64,14 +87,14 @@ class NightScreen(Screen):
             print("=== NUOVA NOTTE ===")
             print("Notte:", self.day_number)
 
-        # Il blocco dell'azione dipende dal giocatore,
-        # non dal numero di volte che apriamo la schermata.
+        # Verifica se il giocatore locale ha già agito
         self.action_used = self.giocatore_ha_agito(
             game_screen.local_player_name
         )
 
         self.selected_player = ""
 
+        # Recupera l'azione associata al ruolo
         ruolo = get_ruolo(self.local_player_role)
 
         if ruolo:
@@ -79,24 +102,29 @@ class NightScreen(Screen):
         else:
             self.current_action = ""
 
+        # Elenco dei giocatori ancora vivi
         self.available_players = [
             player
             for player in game_screen.players
-            if player["alive"]
+            if player.get("alive", False)
         ]
 
         self.update_players()
 
-        print("=== NOTTE ===")
+        print("=== SCHERMATA NOTTURNA ===")
         print("Giocatore:", game_screen.local_player_name)
         print("Ruolo:", self.local_player_role)
         print("Azione:", self.current_action)
         print("Ha già agito:", self.action_used)
-        print("Azioni registrate:", len(self.gestore_notte.azioni))
+
+    # ==========================================
+    # AGGIORNAMENTO GIOCATORI
+    # ==========================================
 
     def update_players(self):
         """
-        Mostra i giocatori vivi selezionabili.
+        Aggiorna l'elenco dei giocatori
+        selezionabili come bersaglio.
         """
 
         if "players_list" not in self.ids:
@@ -114,89 +142,163 @@ class NightScreen(Screen):
 
             button.bind(
                 on_release=lambda instance, name=player["name"]:
-                self.select_player(name)
+                    self.select_player(name)
             )
 
             players_list.add_widget(button)
 
+    # ==========================================
+    # SELEZIONE BERSAGLIO
+    # ==========================================
+
     def select_player(self, player_name):
         """
-        Seleziona il bersaglio.
+        Seleziona il bersaglio dell'azione notturna.
         """
 
         if self.action_used:
-            print("Il giocatore ha già agito.")
+            print("Hai già effettuato un'azione questa notte.")
             return
 
         self.selected_player = player_name
+
         print("Bersaglio selezionato:", player_name)
+
+    # ==========================================
+    # ESECUZIONE AZIONE
+    # ==========================================
 
     def execute_action(self):
         """
-        Registra l'azione del giocatore locale.
+        Registra l'azione notturna del giocatore locale.
         """
 
         game_screen = self.manager.get_screen("game")
         nome_locale = game_screen.local_player_name
 
-        # Verifica anche nel gestore, non soltanto
-        # tramite il flag dell'interfaccia.
+        # Impedisce azioni duplicate
         if self.giocatore_ha_agito(nome_locale):
             self.action_used = True
             print("Azione già registrata questa notte.")
             return
 
         if not self.selected_player:
-            print("Nessun giocatore selezionato.")
+            print("Seleziona prima un bersaglio.")
             return
 
         if not self.current_action:
-            print("Questo ruolo non possiede un'azione.")
+            print("Il tuo ruolo non possiede un'azione notturna.")
             return
 
+        # Recupera il giocatore che agisce
         attore = next(
             (
-                player for player in game_screen.players
+                player
+                for player in game_screen.players
                 if player["name"] == nome_locale
             ),
             None
         )
 
+        # Recupera il bersaglio
         bersaglio = next(
             (
-                player for player in game_screen.players
+                player
+                for player in game_screen.players
                 if player["name"] == self.selected_player
             ),
             None
         )
 
-        if attore is None or not attore["alive"]:
+        if attore is None or not attore.get("alive", False):
             print("Giocatore locale non disponibile.")
             return
 
-        if bersaglio is None or not bersaglio["alive"]:
+        if bersaglio is None or not bersaglio.get("alive", False):
             print("Bersaglio non disponibile.")
             return
 
+        # Registra l'azione nel gestore
         risultato = self.gestore_notte.aggiungi_azione(
             self.current_action,
             attore,
             bersaglio
         )
 
-        print("=== AZIONE REGISTRATA ===")
+        print("=== REGISTRAZIONE AZIONE ===")
         print(risultato)
 
-        if risultato["successo"]:
+        if risultato.get("successo", False):
             self.action_used = True
-            print(
-                "Totale azioni registrate:",
-                len(self.gestore_notte.azioni)
-            )
+
+    # ==========================================
+    # RISULTATI PRIVATI
+    # ==========================================
+
+    def ottieni_risultati_giocatore(self, nome_giocatore):
+        """
+        Recupera i risultati investigativi
+        associati al giocatore indicato.
+        """
+
+        return list(
+            self.casella_risultati.get(nome_giocatore, [])
+        )
+
+    def mostra_risultati_privati(self):
+        """
+        Visualizza i risultati investigativi
+        del giocatore locale.
+        """
+
+        game_screen = self.manager.get_screen("game")
+        nome_locale = game_screen.local_player_name
+
+        risultati = self.ottieni_risultati_giocatore(
+            nome_locale
+        )
+
+        if risultati:
+            messaggi = [
+                risultato.get("messaggio", "")
+                for risultato in risultati
+            ]
+
+            testo = "\n".join(messaggi)
+
+        else:
+            testo = "Nessun risultato investigativo disponibile."
+
+        self.dialog_risultati = MDDialog(
+            title="Risultati delle indagini",
+            text=testo,
+            buttons=[
+                MDFlatButton(
+                    text="CHIUDI",
+                    on_release=self.chiudi_dialog_risultati
+                )
+            ]
+        )
+
+        self.dialog_risultati.open()
+
+    def chiudi_dialog_risultati(self, *args):
+        """
+        Chiude la finestra dei risultati.
+        """
+
+        if self.dialog_risultati:
+            self.dialog_risultati.dismiss()
+            self.dialog_risultati = None
+
+    # ==========================================
+    # RISOLUZIONE NOTTE
+    # ==========================================
 
     def finish_night(self):
         """
-        Risolve tutte le azioni registrate
+        Risolve le azioni della notte,
+        conserva i risultati investigativi
         e passa al giorno successivo.
         """
 
@@ -204,17 +306,35 @@ class NightScreen(Screen):
 
         print("=== RISOLUZIONE NOTTE ===")
 
-        risultati = self.gestore_notte.risolvi()
+        # Risolve protezioni, investigazioni e attacchi
+        risultati_pubblici = self.gestore_notte.risolvi()
 
-        for risultato in risultati:
+        # Conserva le informazioni investigative
+        # prima del reset del gestore
+        for nome_giocatore, risultati in (
+            self.gestore_notte.risultati_privati.items()
+        ):
+
+            self.casella_risultati.setdefault(
+                nome_giocatore, []
+            ).extend(risultati)
+
+        # Mostra nel terminale solo i risultati
+        # non contrassegnati come privati
+        for risultato in risultati_pubblici:
             print(risultato)
 
+        # Aggiorna i giocatori
         game_screen.update_players()
 
+        # Passaggio alla fase diurna
         game_screen.phase = "giorno"
         game_screen.day_number += 1
 
+        # Pulisce le azioni della notte conclusa,
+        # mantenendo la casella dei risultati
         self.gestore_notte.reset()
         self.notte_inizializzata = None
 
+        # Ritorna alla schermata di gioco
         self.manager.current = "game"

@@ -1,3 +1,4 @@
+
 from kivy.uix.screenmanager import Screen
 from kivy.properties import NumericProperty, StringProperty, ListProperty
 
@@ -17,7 +18,7 @@ class GameScreen(Screen):
 
     # Per ora il giocatore locale è impostato manualmente.
     # In futuro arriverà dalla lobby.
-    local_player_name = StringProperty("Alessio")
+    local_player_name = StringProperty("Luca")
     local_player_role = StringProperty("IN ATTESA")
 
     # =========================
@@ -44,6 +45,11 @@ class GameScreen(Screen):
             "name": "Sara",
             "alive": True,
             "role": "Serial Killer"
+        },
+        {
+            "name": "Davide",
+            "alive": True,
+            "role": "Villico"
         }
     ])
 
@@ -71,10 +77,9 @@ class GameScreen(Screen):
             if player["name"] == self.local_player_name:
                 self.local_player_role = player.get("role", "IN ATTESA")
                 return
-            
+
         self.local_player_role = "IN ATTESA"
 
-            
     # =========================
     # LISTA GIOCATORI
     # =========================
