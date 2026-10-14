@@ -7,8 +7,16 @@ from operative.azioni import esegui_azione
 
 class GestoreNotte:
 
+    AZIONI_SUPPORTATE = (
+        "proteggi",
+        "scopri_allineamento",
+        "uccidi"
+    )
+
     def __init__(self):
         self.azioni = []
+        self.risultati_privati = {}
+        self.risultati_pubblici = []
 
     def aggiungi_azione(self, nome_azione, attore, bersaglio):
         """
@@ -28,7 +36,14 @@ class GestoreNotte:
                 "messaggio": "Il bersaglio è morto."
             }
 
-        # Controlla se il giocatore ha già agito
+        if nome_azione not in self.AZIONI_SUPPORTATE:
+            return {
+                "successo": False,
+                "messaggio": (
+                    f"Azione '{nome_azione}' non ancora supportata."
+                )
+            }
+
         for azione in self.azioni:
             if azione["attore"]["name"] == attore["name"]:
                 return {
@@ -39,21 +54,11 @@ class GestoreNotte:
                     )
                 }
 
-        if nome_azione not in ("proteggi", "uccidi"):
-            return {
-                "successo": False,
-                "messaggio": (
-                    f"Azione '{nome_azione}' non ancora supportata."
-                )
-            }
-
-        azione = {
+        self.azioni.append({
             "azione": nome_azione,
             "attore": attore,
             "bersaglio": bersaglio
-        }
-
-        self.azioni.append(azione)
+        })
 
         return {
             "successo": True,
@@ -65,13 +70,19 @@ class GestoreNotte:
 
     def risolvi(self):
         """
-        Risolve le azioni in ordine di priorità:
-        prima protezioni, poi attacchi.
+        Risolve le azioni nell'ordine:
+        1. Protezioni
+        2. Investigazioni
+        3. Attacchi
+
+        I risultati investigativi vengono conservati
+        separatamente dai risultati pubblici.
         """
 
-        risultati = []
+        self.risultati_privati.clear()
+        self.risultati_pubblici.clear()
 
-        for tipo_azione in ("proteggi", "uccidi"):
+        for tipo_azione in self.AZIONI_SUPPORTATE:
             for azione in self.azioni:
 
                 if azione["azione"] != tipo_azione:
@@ -83,12 +94,32 @@ class GestoreNotte:
                     azione["bersaglio"]
                 )
 
-                risultati.append(risultato)
+                if risultato.get("informazione_privata", False):
+                    nome_attore = azione["attore"]["name"]
 
-        return risultati
+                    self.risultati_privati.setdefault(
+                        nome_attore, []
+                    ).append(risultato)
+                else:
+                    self.risultati_pubblici.append(risultato)
+
+        return list(self.risultati_pubblici)
+
+    def ottieni_risultati_privati(self, nome_giocatore):
+        """
+        Restituisce i risultati investigativi
+        associati a uno specifico giocatore.
+        """
+
+        return list(
+            self.risultati_privati.get(nome_giocatore, [])
+        )
 
     def reset(self):
         """
-        Svuota tutte le azioni della notte.
+        Svuota lo stato della notte conclusa.
         """
+
         self.azioni.clear()
+        self.risultati_privati.clear()
+        self.risultati_pubblici.clear()
