@@ -5,9 +5,9 @@
 from operative.ruoli import get_ruolo
 
 
-# =========================
+# ==========================================
 # FUNZIONI DI SUPPORTO
-# =========================
+# ==========================================
 
 def ottieni_fazione(giocatore):
     """
@@ -22,14 +22,12 @@ def ottieni_fazione(giocatore):
     return ruolo.get("fazione")
 
 
-# =========================
-# AZIONE: PROTEGGI
-# =========================
-
-def proteggi(attore, bersaglio):
+def verifica_giocatori_vivi(attore, bersaglio):
     """
-    Protegge un giocatore dagli attacchi dei Lupi
-    durante la notte corrente.
+    Controlla che attore e bersaglio siano vivi.
+
+    Restituisce None se il controllo è superato,
+    altrimenti restituisce un risultato di errore.
     """
 
     if not attore.get("alive", False):
@@ -44,6 +42,24 @@ def proteggi(attore, bersaglio):
             "messaggio": f"{bersaglio['name']} è morto."
         }
 
+    return None
+
+
+# ==========================================
+# AZIONE: PROTEGGI
+# ==========================================
+
+def proteggi(attore, bersaglio):
+    """
+    Protegge un giocatore dagli attacchi dei Lupi
+    durante la notte corrente.
+    """
+
+    errore = verifica_giocatori_vivi(attore, bersaglio)
+
+    if errore is not None:
+        return errore
+
     bersaglio["protected"] = True
 
     return {
@@ -57,9 +73,9 @@ def proteggi(attore, bersaglio):
     }
 
 
-# =========================
+# ==========================================
 # AZIONE: UCCIDI
-# =========================
+# ==========================================
 
 def uccidi(attore, bersaglio):
     """
@@ -67,17 +83,10 @@ def uccidi(attore, bersaglio):
     dell'attaccante e del bersaglio.
     """
 
-    if not attore.get("alive", False):
-        return {
-            "successo": False,
-            "messaggio": f"{attore['name']} è morto e non può agire."
-        }
+    errore = verifica_giocatori_vivi(attore, bersaglio)
 
-    if not bersaglio.get("alive", False):
-        return {
-            "successo": False,
-            "messaggio": f"{bersaglio['name']} è già morto."
-        }
+    if errore is not None:
+        return errore
 
     ruolo_bersaglio = bersaglio.get("role", "")
     fazione_attore = ottieni_fazione(attore)
@@ -132,9 +141,9 @@ def uccidi(attore, bersaglio):
     }
 
 
-# =========================
-# AZIONE: SCOPRI ALLINEAMENTO
-# =========================
+# ==========================================
+# AZIONE: SCOPRI ALLINEAMENTO (VEGGENTE)
+# ==========================================
 
 def scopri_allineamento(attore, bersaglio):
     """
@@ -146,36 +155,22 @@ def scopri_allineamento(attore, bersaglio):
     Neutrali = cattivo
     """
 
-    if not attore.get("alive", False):
-        return {
-            "successo": False,
-            "messaggio": (
-                f"{attore['name']} è morto e non può agire."
-            )
-        }
+    errore = verifica_giocatori_vivi(attore, bersaglio)
 
-    if not bersaglio.get("alive", False):
-        return {
-            "successo": False,
-            "messaggio": (
-                f"{bersaglio['name']} è morto."
-            )
-        }
+    if errore is not None:
+        return errore
 
     fazione = ottieni_fazione(bersaglio)
 
     if fazione is None:
         return {
             "successo": False,
-            "messaggio": (
-                "Fazione del bersaglio sconosciuta."
-            )
+            "messaggio": "Fazione del bersaglio sconosciuta."
         }
 
-    if fazione == "Umani":
-        allineamento = "buono"
-    else:
-        allineamento = "cattivo"
+    allineamento = (
+        "buono" if fazione == "Umani" else "cattivo"
+    )
 
     return {
         "successo": True,
@@ -190,9 +185,127 @@ def scopri_allineamento(attore, bersaglio):
     }
 
 
-# =========================
+# ==========================================
+# AZIONE: INVESTIGA FAZIONE
+# ==========================================
+
+def investiga_fazione(attore, bersaglio):
+    """
+    Prima indagine dell'Investigatore.
+
+    Restituisce la fazione esatta del bersaglio:
+    Umani, Lupi oppure Neutrali.
+    """
+
+    errore = verifica_giocatori_vivi(attore, bersaglio)
+
+    if errore is not None:
+        return errore
+
+    fazione = ottieni_fazione(bersaglio)
+
+    if fazione is None:
+        return {
+            "successo": False,
+            "messaggio": "Fazione del bersaglio sconosciuta."
+        }
+
+    return {
+        "successo": True,
+        "azione": "investiga",
+        "tipo_indagine": "fazione",
+        "attore": attore["name"],
+        "bersaglio": bersaglio["name"],
+        "informazione_privata": True,
+        "risultato": fazione,
+        "messaggio": (
+            f"{bersaglio['name']} appartiene "
+            f"alla fazione {fazione}."
+        )
+    }
+
+
+# ==========================================
+# AZIONE: INVESTIGA RUOLO
+# ==========================================
+
+def investiga_ruolo(attore, bersaglio):
+    """
+    Seconda indagine dell'Investigatore.
+
+    Restituisce il ruolo esatto del bersaglio.
+    """
+
+    errore = verifica_giocatori_vivi(attore, bersaglio)
+
+    if errore is not None:
+        return errore
+
+    ruolo = bersaglio.get("role")
+
+    if not ruolo:
+        return {
+            "successo": False,
+            "messaggio": "Ruolo del bersaglio sconosciuto."
+        }
+
+    return {
+        "successo": True,
+        "azione": "investiga",
+        "tipo_indagine": "ruolo",
+        "attore": attore["name"],
+        "bersaglio": bersaglio["name"],
+        "informazione_privata": True,
+        "risultato": ruolo,
+        "messaggio": (
+            f"Il ruolo esatto di {bersaglio['name']} "
+            f"è {ruolo}."
+        )
+    }
+
+
+# ==========================================
+# AZIONE: SILENZIA (LUPO SILENZIATORE)
+# ==========================================
+
+def silenzia(attore, bersaglio):
+    """
+    Il Lupo Silenziatore impedisce al bersaglio
+    di parlare e votare durante il giorno successivo.
+
+    La durata dell'effetto viene gestita
+    dal ciclo giorno/notte.
+    """
+
+    errore = verifica_giocatori_vivi(attore, bersaglio)
+
+    if errore is not None:
+        return errore
+
+    # Impedisce di parlare durante il giorno.
+    bersaglio["silenced"] = True
+
+    # Impedisce di partecipare alla votazione.
+    bersaglio["can_vote"] = False
+
+    return {
+        "successo": True,
+        "azione": "silenzia",
+        "attore": attore["name"],
+        "bersaglio": bersaglio["name"],
+        "informazione_privata": True,
+        "risultato": "silenziato",
+        "messaggio": (
+            f"{bersaglio['name']} è stato silenziato "
+            "e non potrà parlare né votare "
+            "durante il giorno successivo."
+        )
+    }
+
+
+# ==========================================
 # DISPATCHER DELLE AZIONI
-# =========================
+# ==========================================
 
 def esegui_azione(nome_azione, attore, bersaglio):
     """
@@ -207,6 +320,15 @@ def esegui_azione(nome_azione, attore, bersaglio):
 
     if nome_azione == "scopri_allineamento":
         return scopri_allineamento(attore, bersaglio)
+
+    if nome_azione == "investiga_fazione":
+        return investiga_fazione(attore, bersaglio)
+
+    if nome_azione == "investiga_ruolo":
+        return investiga_ruolo(attore, bersaglio)
+
+    if nome_azione == "silenzia":
+        return silenzia(attore, bersaglio)
 
     return {
         "successo": False,

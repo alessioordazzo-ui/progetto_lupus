@@ -29,7 +29,7 @@ class GameScreen(Screen):
         {
             "name": "Alessio",
             "alive": True,
-            "role": "Curatore"
+            "role": "Lupo Silenziatore"
         },
         {
             "name": "Marco",

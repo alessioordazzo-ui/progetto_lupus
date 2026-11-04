@@ -5,10 +5,6 @@
         padding: "16dp"
         spacing: "12dp"
 
-        # =========================
-        # TITOLO
-        # =========================
-
         MDLabel:
             text: "VOTAZIONE"
             halign: "center"
@@ -17,21 +13,13 @@
             size_hint_y: None
             height: "55dp"
 
-        # =========================
-        # ISTRUZIONI
-        # =========================
-
         MDLabel:
-            text: "Scegli il giocatore che vuoi votare"
+            text: root.vote_status_message
             halign: "center"
             font_style: "Body1"
-            theme_text_color: "Secondary"
+            theme_text_color: "Error" if root.is_local_silenced else "Secondary"
             size_hint_y: None
-            height: "45dp"
-
-        # =========================
-        # LISTA GIOCATORI
-        # =========================
+            height: "65dp"
 
         ScrollView:
             do_scroll_x: False
@@ -43,10 +31,6 @@
                 size_hint_y: None
                 height: self.minimum_height
 
-        # =========================
-        # GIOCATORE SELEZIONATO
-        # =========================
-
         MDLabel:
             text: "Selezionato: " + root.selected_player if root.selected_player else "Nessun giocatore selezionato"
             halign: "center"
@@ -54,16 +38,17 @@
             size_hint_y: None
             height: "50dp"
 
-        # =========================
-        # CONFERMA
-        # =========================
-
         MDRaisedButton:
             text: "CONFERMA VOTO"
             pos_hint: {"center_x": .5}
             size_hint_y: None
             height: "50dp"
-            disabled: not root.selected_player
+            disabled: not root.selected_player or not root.can_local_vote
+            on_release: root.confirm_vote()
 
-            on_release:
-                root.confirm_vote()
+        MDFlatButton:
+            text: "PROSEGUI SENZA VOTARE"
+            pos_hint: {"center_x": .5}
+            size_hint_y: None
+            height: "50dp"
+            on_release: root.skip_vote()

@@ -28,17 +28,12 @@ class NightScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        # Gestore delle azioni notturne
         self.gestore_notte = GestoreNotte()
-
-        # Identificativo della notte corrente
         self.notte_inizializzata = None
 
-        # Archivio dei risultati investigativi
-        # associati ai singoli giocatori
+        # Archivio persistente dei risultati privati.
         self.casella_risultati = {}
 
-        # Finestra dei risultati
         self.dialog_risultati = None
 
     # ==========================================
@@ -47,8 +42,8 @@ class NightScreen(Screen):
 
     def giocatore_ha_agito(self, nome_giocatore):
         """
-        Controlla se il giocatore ha già registrato
-        un'azione durante la notte corrente.
+        Verifica se il giocatore ha già registrato
+        un'azione nella notte corrente.
         """
 
         return any(
@@ -64,8 +59,11 @@ class NightScreen(Screen):
         """
         Prepara la schermata notturna.
 
-        Le azioni vengono mantenute quando
-        si rientra nella stessa notte.
+        Mantiene le azioni quando si rientra
+        nella stessa notte.
+
+        Rimuove gli effetti temporanei
+        della giornata precedente.
         """
 
         game_screen = self.manager.get_screen("game")
@@ -73,28 +71,44 @@ class NightScreen(Screen):
         self.day_number = game_screen.day_number
         self.local_player_role = game_screen.local_player_role
 
-        # Nuova notte
         if self.notte_inizializzata != self.day_number:
 
             self.gestore_notte.reset()
 
-            # Rimuove le protezioni della notte precedente
+            # Identifica la notte corrente
+            # per la gestione dell'Investigatore.
+            self.gestore_notte.imposta_notte(
+                self.day_number
+            )
+
+            # Rimuove gli effetti temporanei
+            # della notte e del giorno precedenti.
             for player in game_screen.players:
+
+                # La protezione del Curatore
+                # non dura oltre la notte.
                 player["protected"] = False
+
+                # Il silenzio termina all'inizio
+                # della notte successiva.
+                player["silenced"] = False
+
+                # Il giocatore recupera
+                # il diritto di voto.
+                player["can_vote"] = True
 
             self.notte_inizializzata = self.day_number
 
             print("=== NUOVA NOTTE ===")
             print("Notte:", self.day_number)
+            print("Effetti temporanei precedenti rimossi.")
 
-        # Verifica se il giocatore locale ha già agito
         self.action_used = self.giocatore_ha_agito(
             game_screen.local_player_name
         )
 
         self.selected_player = ""
 
-        # Recupera l'azione associata al ruolo
         ruolo = get_ruolo(self.local_player_role)
 
         if ruolo:
@@ -102,7 +116,6 @@ class NightScreen(Screen):
         else:
             self.current_action = ""
 
-        # Elenco dei giocatori ancora vivi
         self.available_players = [
             player
             for player in game_screen.players
@@ -123,8 +136,7 @@ class NightScreen(Screen):
 
     def update_players(self):
         """
-        Aggiorna l'elenco dei giocatori
-        selezionabili come bersaglio.
+        Aggiorna i giocatori selezionabili.
         """
 
         if "players_list" not in self.ids:
@@ -153,7 +165,7 @@ class NightScreen(Screen):
 
     def select_player(self, player_name):
         """
-        Seleziona il bersaglio dell'azione notturna.
+        Seleziona il bersaglio dell'azione.
         """
 
         if self.action_used:
@@ -165,7 +177,7 @@ class NightScreen(Screen):
         print("Bersaglio selezionato:", player_name)
 
     # ==========================================
-    # ESECUZIONE AZIONE
+    # REGISTRAZIONE AZIONE
     # ==========================================
 
     def execute_action(self):
@@ -176,7 +188,6 @@ class NightScreen(Screen):
         game_screen = self.manager.get_screen("game")
         nome_locale = game_screen.local_player_name
 
-        # Impedisce azioni duplicate
         if self.giocatore_ha_agito(nome_locale):
             self.action_used = True
             print("Azione già registrata questa notte.")
@@ -190,7 +201,6 @@ class NightScreen(Screen):
             print("Il tuo ruolo non possiede un'azione notturna.")
             return
 
-        # Recupera il giocatore che agisce
         attore = next(
             (
                 player
@@ -200,7 +210,6 @@ class NightScreen(Screen):
             None
         )
 
-        # Recupera il bersaglio
         bersaglio = next(
             (
                 player
@@ -218,7 +227,6 @@ class NightScreen(Screen):
             print("Bersaglio non disponibile.")
             return
 
-        # Registra l'azione nel gestore
         risultato = self.gestore_notte.aggiungi_azione(
             self.current_action,
             attore,
@@ -237,8 +245,8 @@ class NightScreen(Screen):
 
     def ottieni_risultati_giocatore(self, nome_giocatore):
         """
-        Recupera i risultati investigativi
-        associati al giocatore indicato.
+        Restituisce i risultati privati
+        conservati per il giocatore.
         """
 
         return list(
@@ -247,7 +255,7 @@ class NightScreen(Screen):
 
     def mostra_risultati_privati(self):
         """
-        Visualizza i risultati investigativi
+        Mostra esclusivamente i risultati
         del giocatore locale.
         """
 
@@ -259,15 +267,12 @@ class NightScreen(Screen):
         )
 
         if risultati:
-            messaggi = [
+            testo = "\n".join(
                 risultato.get("messaggio", "")
                 for risultato in risultati
-            ]
-
-            testo = "\n".join(messaggi)
-
+            )
         else:
-            testo = "Nessun risultato investigativo disponibile."
+            testo = "Nessun risultato privato disponibile."
 
         self.dialog_risultati = MDDialog(
             title="Risultati delle indagini",
@@ -292,49 +297,41 @@ class NightScreen(Screen):
             self.dialog_risultati = None
 
     # ==========================================
-    # RISOLUZIONE NOTTE
+    # CONCLUSIONE NOTTE
     # ==========================================
 
     def finish_night(self):
         """
-        Risolve le azioni della notte,
-        conserva i risultati investigativi
-        e passa al giorno successivo.
+        Risolve le azioni, conserva i risultati
+        privati e avanza al giorno successivo.
         """
 
         game_screen = self.manager.get_screen("game")
 
         print("=== RISOLUZIONE NOTTE ===")
 
-        # Risolve protezioni, investigazioni e attacchi
         risultati_pubblici = self.gestore_notte.risolvi()
 
-        # Conserva le informazioni investigative
-        # prima del reset del gestore
+        # Conserva i risultati privati
+        # di Veggente, Investigatore e altri ruoli.
         for nome_giocatore, risultati in (
             self.gestore_notte.risultati_privati.items()
         ):
-
             self.casella_risultati.setdefault(
                 nome_giocatore, []
             ).extend(risultati)
 
-        # Mostra nel terminale solo i risultati
-        # non contrassegnati come privati
         for risultato in risultati_pubblici:
             print(risultato)
 
-        # Aggiorna i giocatori
         game_screen.update_players()
 
-        # Passaggio alla fase diurna
         game_screen.phase = "giorno"
         game_screen.day_number += 1
 
-        # Pulisce le azioni della notte conclusa,
-        # mantenendo la casella dei risultati
+        # Lo stato delle indagini rimane conservato
+        # nel GestoreNotte.
         self.gestore_notte.reset()
         self.notte_inizializzata = None
 
-        # Ritorna alla schermata di gioco
         self.manager.current = "game"
