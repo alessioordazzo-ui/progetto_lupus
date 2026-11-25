@@ -1,23 +1,28 @@
 
-from kivy.uix.screenmanager import Screen
-from kivy.properties import NumericProperty, StringProperty, ListProperty
+from kivy.properties import (
+    StringProperty,
+    NumericProperty,
+    ListProperty,
+)
 
+from kivymd.uix.screen import MDScreen
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.label import MDLabel
-from kivy.clock import Clock
 
 
-class GameScreen(Screen):
+class GameScreen(MDScreen):
 
     # =========================
-    # STATO DELLA PARTITA
+    # STATO PARTITA
     # =========================
 
     day_number = NumericProperty(1)
     phase = StringProperty("giorno")
 
-    # Per ora il giocatore locale è impostato manualmente.
-    # In futuro arriverà dalla lobby.
+    # =========================
+    # GIOCATORE LOCALE
+    # =========================
+
     local_player_name = StringProperty("Alessio")
     local_player_role = StringProperty("IN ATTESA")
 
@@ -54,36 +59,38 @@ class GameScreen(Screen):
     ])
 
     # =========================
-    # INIZIALIZZAZIONE
+    # INGRESSO SCHERMATA
     # =========================
-    def on_kv_post(self, base_widget):
+
+    def on_pre_enter(self, *args):
         self.update_local_player_role()
         self.update_players()
 
-    def on_pre_enter(self):
-        self.update_local_player_role()
-        self.update_players()
-
-        print("PROPERTY:", self.local_player_role)
-        print("LABEL:", self.ids.role_label.text)
-
     # =========================
-    # RUOLO GIOCATORE LOCALE
+    # AGGIORNAMENTO RUOLO
     # =========================
 
     def update_local_player_role(self):
+
         for player in self.players:
+
             if player["name"] == self.local_player_name:
-                self.local_player_role = player.get("role", "IN ATTESA")
+
+                self.local_player_role = player.get(
+                    "role",
+                    "IN ATTESA"
+                )
+
                 return
 
         self.local_player_role = "IN ATTESA"
 
     # =========================
-    # LISTA GIOCATORI
+    # AGGIORNAMENTO GIOCATORI
     # =========================
 
     def update_players(self):
+
         if "players_list" not in self.ids:
             return
 
@@ -128,7 +135,9 @@ class GameScreen(Screen):
     # =========================
 
     def kill_player(self, player_name):
+
         for player in self.players:
+
             if player["name"] == player_name:
                 player["alive"] = False
                 break
@@ -140,8 +149,10 @@ class GameScreen(Screen):
     # =========================
 
     def next_phase(self):
+
         if self.phase == "giorno":
             self.phase = "notte"
+
         else:
             self.phase = "giorno"
             self.day_number += 1
@@ -155,3 +166,80 @@ class GameScreen(Screen):
 
     def open_night(self):
         self.manager.current = "night"
+
+    # =========================
+    # TEST - CAMBIO GIOCATORE LOCALE
+    # =========================
+
+    def cambia_giocatore_test(self, nome):
+        """
+        Cambia il giocatore locale senza
+        riavviare o azzerare la partita.
+
+        Funzione temporanea per i test.
+        """
+
+        giocatore = next(
+            (
+                player
+                for player in self.players
+                if player["name"] == nome
+            ),
+            None
+        )
+
+        if giocatore is None:
+
+            print(
+                f"Giocatore {nome} non trovato.",
+                flush=True
+            )
+
+            return False
+
+        self.local_player_name = nome
+
+        self.update_local_player_role()
+        self.update_players()
+
+        print(
+            "\n=== CAMBIO GIOCATORE TEST ===",
+            flush=True
+        )
+
+        print(
+            "Nome:",
+            self.local_player_name,
+            flush=True
+        )
+
+        print(
+            "Ruolo:",
+            self.local_player_role,
+            flush=True
+        )
+
+        print(
+            "Vivo:",
+            giocatore.get("alive"),
+            flush=True
+        )
+
+        print(
+            "Silenziato:",
+            giocatore.get("silenced", False),
+            flush=True
+        )
+
+        print(
+            "Può votare:",
+            giocatore.get("can_vote", True),
+            flush=True
+        )
+
+        print(
+            "============================\n",
+            flush=True
+        )
+
+        return True

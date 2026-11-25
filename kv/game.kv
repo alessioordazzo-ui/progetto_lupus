@@ -131,3 +131,16 @@
 
                 on_release:
                     root.open_vote() if root.phase == "giorno" else root.open_night()
+
+        # =========================
+        # TEST - CAMBIO GIOCATORE
+        # =========================
+
+        MDRaisedButton:
+            text: "TEST: PASSA A MARCO"
+            size_hint_x: 1
+            size_hint_y: None
+            height: "45dp"
+
+            on_release:
+                root.cambia_giocatore_test("Marco")

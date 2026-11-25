@@ -1,3 +1,4 @@
+
 from kivy.uix.screenmanager import Screen
 from kivy.properties import (
     StringProperty,
@@ -23,6 +24,20 @@ class VoteScreen(Screen):
     vote_status_message = StringProperty(
         "Caricamento votazione..."
     )
+
+    # ==========================================
+    # INIZIALIZZAZIONE
+    # ==========================================
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        # Registro dei voti della partita.
+        # Chiave: (giorno, nome del votante)
+        # Valore: informazioni sul voto.
+        self.voti_registrati = {}
+
+        self.voto_registrato = None
 
     # ==========================================
     # GIOCATORE LOCALE
@@ -51,6 +66,31 @@ class VoteScreen(Screen):
         )
 
     # ==========================================
+    # CONTROLLO VOTO GIA' REGISTRATO
+    # ==========================================
+
+    def ha_gia_votato(self):
+        """
+        Controlla se il giocatore locale
+        ha gia' votato nella giornata corrente.
+        """
+
+        if self.manager is None:
+            return False
+
+        if not self.manager.has_screen("game"):
+            return False
+
+        game_screen = self.manager.get_screen("game")
+
+        chiave_voto = (
+            game_screen.day_number,
+            game_screen.local_player_name
+        )
+
+        return chiave_voto in self.voti_registrati
+
+    # ==========================================
     # AGGIORNAMENTO STATO LOCALE
     # ==========================================
 
@@ -61,16 +101,6 @@ class VoteScreen(Screen):
         """
 
         giocatore = self.ottieni_giocatore_locale()
-        print("\n=== DEBUG VOTAZIONE ===")
-        print("Giocatore locale:", giocatore)
-
-        if giocatore is not None:
-            print("Nome:", giocatore.get("name"))
-            print("Vivo:", giocatore.get("alive"))
-            print("Silenziato:", giocatore.get("silenced"))
-            print("Può votare:", giocatore.get("can_vote"))
-
-        print("========================\n")
 
         self.can_local_vote = False
         self.is_local_silenced = False
@@ -94,13 +124,19 @@ class VoteScreen(Screen):
         if self.is_local_silenced:
             self.vote_status_message = (
                 "SEI STATO SILENZIATO! "
-                "Oggi non puoi parlare né votare."
+                "Oggi non puoi parlare ne' votare."
             )
             return
 
         if not giocatore.get("can_vote", True):
             self.vote_status_message = (
                 "Non puoi partecipare alla votazione."
+            )
+            return
+
+        if self.ha_gia_votato():
+            self.vote_status_message = (
+                "Hai gia' votato in questa giornata."
             )
             return
 
@@ -116,9 +152,8 @@ class VoteScreen(Screen):
 
     def puo_votare(self):
         """
-        Verifica lo stato effettivo del giocatore.
-
-        Non dipende dal messaggio visualizzato.
+        Verifica il diritto di voto effettivo,
+        compreso il controllo del doppio voto.
         """
 
         giocatore = self.ottieni_giocatore_locale()
@@ -133,6 +168,9 @@ class VoteScreen(Screen):
             return False
 
         if not giocatore.get("can_vote", True):
+            return False
+
+        if self.ha_gia_votato():
             return False
 
         return True
@@ -159,11 +197,11 @@ class VoteScreen(Screen):
         self.selected_player = ""
 
         self.aggiorna_stato_votazione()
-
         self.update_players()
 
         print(
-            f"Stato votazione: {self.vote_status_message}"
+            f"Stato votazione: {self.vote_status_message}",
+            flush=True
         )
 
     # ==========================================
@@ -208,13 +246,24 @@ class VoteScreen(Screen):
         """
 
         if not self.puo_votare():
-            print("Votazione non consentita.")
+            print("Votazione non consentita.", flush=True)
             self.selected_player = ""
+            return
+
+        if not any(
+            player["name"] == player_name
+            and player.get("alive", False)
+            for player in self.players
+        ):
+            print("Giocatore non disponibile.", flush=True)
             return
 
         self.selected_player = player_name
 
-        print(f"Giocatore selezionato: {player_name}")
+        print(
+            f"Giocatore selezionato: {player_name}",
+            flush=True
+        )
 
     # ==========================================
     # CONFERMA VOTO
@@ -222,19 +271,22 @@ class VoteScreen(Screen):
 
     def confirm_vote(self):
         """
-        Conferma il voto ed elimina il
-        giocatore selezionato.
+        Registra un voto senza eliminare
+        immediatamente il bersaglio.
         """
 
         if not self.puo_votare():
             print(
-                "Voto bloccato: il giocatore "
-                "non ha diritto di voto."
+                "Voto bloccato: giocatore non autorizzato "
+                "oppure voto gia' registrato.",
+                flush=True
             )
             self.selected_player = ""
+            self.aggiorna_stato_votazione()
             return
 
         if not self.selected_player:
+            print("Nessun giocatore selezionato.", flush=True)
             return
 
         game_screen = self.manager.get_screen("game")
@@ -250,20 +302,37 @@ class VoteScreen(Screen):
         )
 
         if bersaglio is None:
-            print(
-                "Il giocatore selezionato "
-                "non è disponibile."
-            )
+            print("Bersaglio non disponibile.", flush=True)
             return
 
-        game_screen.kill_player(self.selected_player)
-
-        print(
-            f"{self.selected_player} è stato eliminato."
+        chiave_voto = (
+            game_screen.day_number,
+            game_screen.local_player_name
         )
 
-        game_screen.phase = "notte"
-        self.manager.current = "game"
+        voto = {
+            "votante": game_screen.local_player_name,
+            "bersaglio": self.selected_player,
+            "giorno": game_screen.day_number
+        }
+
+        # Registra il voto.
+        self.voti_registrati[chiave_voto] = voto
+        self.voto_registrato = voto
+
+        print("\n=== VOTO REGISTRATO ===", flush=True)
+        print("Votante:", voto["votante"], flush=True)
+        print("Bersaglio:", voto["bersaglio"], flush=True)
+        print("Giorno:", voto["giorno"], flush=True)
+        print("Bersaglio vivo:", bersaglio["alive"], flush=True)
+        print("======================\n", flush=True)
+
+        # Aggiorna i permessi e disabilita
+        # i pulsanti dopo il voto.
+        self.selected_player = ""
+
+        self.aggiorna_stato_votazione()
+        self.update_players()
 
     # ==========================================
     # USCITA SENZA VOTO
@@ -273,12 +342,17 @@ class VoteScreen(Screen):
         """
         Termina la fase di voto
         senza eliminazioni.
+
+        Gestione provvisoria:
+        il conteggio collettivo dei voti
+        sara' implementato successivamente.
         """
 
         game_screen = self.manager.get_screen("game")
 
         print(
-            "Votazione terminata senza eliminazioni."
+            "Votazione terminata senza eliminazioni.",
+            flush=True
         )
 
         game_screen.phase = "notte"
